@@ -1,0 +1,42 @@
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    command: [ " --verbose start-dev" ]
+    secrets:
+      - source: server_crt
+        target: /etc/x509/https/tls.crt
+        uid: '103'
+        gid: '103'
+        mode: 0440
+      - source: server_key
+        target: /etc/x509/https/tls.key
+        uid: '103'
+        gid: '103'
+        mode: 0440
+    volumes:
+      - type: volume
+        source: keycloak-local
+        target: /opt/keycloak/data
+    ports:
+      - target: 8443 # Keycloak HTTPS port
+        published: 8443
+        protocol: tcp
+        mode: host
+      - target: 8080 # Keycloak HTTP port
+        published: 8442
+        protocol: tcp
+        mode: host
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin1
+    container_name: local-keycloak
+
+volumes:
+  keycloak-local:
+    name: keycloak-local
+
+secrets:
+  server_crt:
+    file: ./SSL/self_signed.crt
+  server_key:
+    file: ./SSL/self_signed_key.pem
