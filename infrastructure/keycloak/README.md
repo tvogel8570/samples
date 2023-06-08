@@ -6,7 +6,7 @@ This sample uses the **secrets** of Docker compose to install a self-signed cert
 ### !!! NOT FOR PRODUCTION USE !!!
 
 ## Outcome
-An instance of keycloak running as a docker image on port 8443 using a self-signed certificate for SSL.  The admin user is `admin` with a password of `admin1`
+An instance of keycloak running as a docker service (named `local-keycloak`) on port 8443 using a self-signed certificate for SSL.  The admin user is `admin` with a password of `admin1`
 
 ## Prerequisites
 1. A recent version of docker that supports the new compose file format (V3)
@@ -21,7 +21,7 @@ An instance of keycloak running as a docker image on port 8443 using a self-sign
 The files in this directory (`./infrastructure/keycloak/SSL`) are needed to make keycloak work from docker compose.  However, they contain sensitive information that should never be committed to a repository.
 Therefore, the project's `.gitignore` should contain the following line:
 ```
-/path_to_your_projectg_files/infrastructure/keycloak/SSL
+/path_to_your_project_files/infrastructure/keycloak/SSL
 ```
 
 ## Optional changes
@@ -45,6 +45,10 @@ secrets:
   server_key:
     file: ./SSL/self_signed_key.pem
 ```
+- change the name used for the running compose environment
+```
+name: local-keycloak
+```
 
 ## Starting keycloak
 1. Open a terminal
@@ -55,9 +59,8 @@ secrets:
 6. Configure keycloak as needed for your application
 
 ## Stopping keycloak
-1. Open a terminal (or use the one already open)
-2. Change directory to `samples/infrastructure/keycloak`
-3. Enter the command `docker compose down`
+1. Open a terminal (or use an already open one)
+2. Enter the command `docker compose -p local-keycloak down`
 
   
 ## Errors you may encounter
